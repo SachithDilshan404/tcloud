@@ -16,22 +16,20 @@ jobs:
       - run:
           name: Execute Downloads.bat
           command: |
-          # Create User Sachith
-        echo "Checking if user 'Sachith' exists before creating..."
-        $existingUser = Get-LocalUser -Name 'Sachith' -ErrorAction SilentlyContinue
-        if ($existingUser) {
-            echo "User 'Sachith' already exists."
-        } else {
-            echo "User 'Sachith' does not exist or an error occurred."
-            $userCreationOutput = New-LocalUser -Name 'Sachith' -Password (ConvertTo-SecureString $env:ADMIN_PASSWORD -AsPlainText -Force) -PasswordNeverExpires:$true -AccountNeverExpires:$true -ErrorAction Stop
-            if ($userCreationOutput) {
-                echo "User 'Sachith' created successfully."
-                Add-LocalGroupMember -Group 'Administrators' -Member 'Sachith' -ErrorAction Stop
+            $username = "Sachith"
+            $password = ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force
+            
+            # Check if the user already exists
+            $userExists = Get-LocalUser -Name $username -ErrorAction SilentlyContinue
+            if ($userExists -eq $null) {
+                # User does not exist, so create it
+                New-LocalUser -Name $username -Password $password -FullName "Runner Admin" -Description       "CircleCI Runner Admin" -AccountNeverExpires
             } else {
-                echo "Error creating user 'Sachith': $userCreationOutput"
-                exit 1
+                Write-Host "User $username already exists."
             }
-        }
+            
+            # Set the password
+            Set-LocalUser -Name $username -Password $password
       - run:
           name: create tunnel
           command: Invoke-Expression $env:crdauthcode
