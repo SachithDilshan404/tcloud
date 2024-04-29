@@ -34,9 +34,9 @@ jobs:
           name: create tunnel
           command: Invoke-Expression $env:crdauthcode
       - run:
-          name: download looper
+          name: Download loop
           command: |
-          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/loop.ps1' -OutFile 'loop.ps1'
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/loop.ps1' -OutFile 'loop.ps1'
       - run:
           name: Enable looper
           command: powershell -File 'loop.ps1'
