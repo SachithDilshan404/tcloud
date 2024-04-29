@@ -6,19 +6,39 @@ jobs:
     executor: win/server-2022
     steps:
       - run:
-          name: Download Downloads.bat
+          name: Download setup
           command: |
-            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/Downloads.bat" -OutFile "Downloads.bat"
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/setup.ps1' -OutFile 'setup.ps1'
       - run:
-          name: download loop
-          command: |
-            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/loop.ps1' -OutFile 'loop.ps1'
+          name: run setup
+          command: powershell -File 'setup.ps1'
+            
       - run:
           name: Execute Downloads.bat
-          command: cmd /c Downloads.bat
+          command: |
+          # Create User Sachith
+        echo "Checking if user 'Sachith' exists before creating..."
+        $existingUser = Get-LocalUser -Name 'Sachith' -ErrorAction SilentlyContinue
+        if ($existingUser) {
+            echo "User 'Sachith' already exists."
+        } else {
+            echo "User 'Sachith' does not exist or an error occurred."
+            $userCreationOutput = New-LocalUser -Name 'Sachith' -Password (ConvertTo-SecureString $env:ADMIN_PASSWORD -AsPlainText -Force) -PasswordNeverExpires:$true -AccountNeverExpires:$true -ErrorAction Stop
+            if ($userCreationOutput) {
+                echo "User 'Sachith' created successfully."
+                Add-LocalGroupMember -Group 'Administrators' -Member 'Sachith' -ErrorAction Stop
+            } else {
+                echo "Error creating user 'Sachith': $userCreationOutput"
+                exit 1
+            }
+        }
       - run:
-          name: Create Loging
-          command: cmd /c show.bat
+          name: create tunnel
+          command: Invoke-Expression $env:crdauthcode
+      - run:
+          name: download looper
+          command: |
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/loop.ps1' -OutFile 'loop.ps1'
       - run:
           name: Enable looper
           command: powershell -File 'loop.ps1'
