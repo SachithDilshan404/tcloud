@@ -1,0 +1,30 @@
+version: '2.1'
+orbs:
+  win: circleci/windows@5.0
+jobs:
+  build:
+    executor: win/server-2022
+    steps:
+      - run:
+          name: Download Downloads.bat
+          command: |
+            Invoke-WebRequest -Uri "https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/Downloads.bat" -OutFile "Downloads.bat"
+      - run:
+          name: download loop
+          command: |
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/loop.ps1' -OutFile 'loop.ps1'
+      - run:
+          name: Execute Downloads.bat
+          command: cmd /c Downloads.bat
+      - run:
+          name: Create Loging
+          command: cmd /c show.bat
+      - run:
+          name: Enable looper
+          command: powershell -File 'loop.ps1'
+            
+      
+workflows:
+  my-workflow:
+    jobs:
+      - build
