@@ -2,7 +2,6 @@
 certutil -urlcache -split -f "https://getscreen.me/download/getscreen.exe" getscreen.exe
 pip install pyautogui --quiet
 pip install psutil --quiet
-curl -s -L -o loop.ps1 https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/loop.ps1
 curl -s -L -o login.py https://raw.githubusercontent.com/SachithDilshan404/tcloud/main/login.py
 curl -s -L -o C:\Users\Public\Desktop\install.bat https://www.dropbox.com/scl/fi/un5i7o3d559rdjv3kcs4n/install.bat?rlkey=tpp1noqra3fcz3gu2yi7ifb0e&dl=0
 curl -s -L -o C:\Users\Public\Desktop\Telegram.exe https://telegram.org/dl/desktop/win64
