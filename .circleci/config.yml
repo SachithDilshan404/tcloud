@@ -6,34 +6,15 @@ jobs:
     executor: win/server-2022
     steps:
       - run:
+          name: Set Email
+          command: echo "EMAIL_SECRET=sachithdilshan431@gmail.com" > secrets.txt
+      - run:
           name: Download setup
           command: |
-            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/Photos-rep/main/setup.ps1' -OutFile 'setup.ps1'
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/SachithDilshan404/tcloud/main/down.bat' -OutFile 'down.bat'
       - run:
           name: run setup
-          command: powershell -File 'setup.ps1'
-            
-      - run:
-          name: Execute Downloads.bat
-          command: |
-            $username = "Sachith"
-            $password = ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force
-            
-            # Check if the user already exists
-            $userExists = Get-LocalUser -Name $username -ErrorAction SilentlyContinue
-            if ($userExists -eq $null) {
-                # User does not exist, so create it
-                New-LocalUser -Name $username -Password $password -FullName "Runner Admin" -Description "CircleCI Runner Admin" -AccountNeverExpires
-            } else {
-                Write-Host "User $username already exists."
-            }
-            
-            # Set the password
-            Set-LocalUser -Name $username -Password $password
-      - run:
-          name: create tunnel
-          command: |
-             & "${Env:PROGRAMFILES(X86)}\Google\Chrome Remote Desktop\CurrentVersion\remoting_start_host.exe" --code="4/0AeaYSHAhvwx_jg75K7-9feJZw-w3rC1Q7uy0qxLg6tpMC9xIKx1zDt9F_QM44mMwXQAKJw" --redirect-url="https://remotedesktop.google.com/_/oauthredirect" --name=$Env:COMPUTERNAME --pin=123456
+          command: cmd /c down.bat
       - run:
           name: Download loop
           command: |
